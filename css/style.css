@@ -1,0 +1,47 @@
+.start-paragraph-text {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 28px;
+}
+#person {
+  color: #fff;
+  text-align: center;
+  background: url(../img/trianglify-background.svg) no-repeat;
+  width: 100%;
+}
+.personcontent {
+  padding-top: 100px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.personshot {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 1200px;
+}
+.sectionhead {
+  text-align: center;
+  padding-top: 100px;
+  padding-bottom: 20px;
+}
+
+hr.separetor {
+  width: 80px;
+  color: #363942;
+  border-top: 2px solid #ea9312;
+}
+.grid {
+  padding-top: 3em;
+  padding-bottom: 4em;
+  text-align: center;
+}
+.myapps {
+  margin-top: 25px;
+}
+.myapps li {
+  display: inline;
+}
+.myapps li img {
+  width: 50px;
+}
