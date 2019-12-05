@@ -1,0 +1,27 @@
+* {
+  box-sizing: border-box !important;
+}
+
+body {
+  background-color: #c5cae9;
+}
+
+.brand-logo {
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 9px !important;
+}
+
+.brand-logo span {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.navcolor {
+  background-color: #303f9f;
+  color: #ffffff;
+}

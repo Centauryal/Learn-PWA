@@ -32,7 +32,7 @@ var urlsToCache = [
   "/img/logo/logo_96.png",
   "/img/logo/logo_144.png",
   "/img/logo/logo_192.png",
-  "/img/logo/logo_512.png",
+  "/img/logo/logo_512.png"
 ];
 
 self.addEventListener("install", function(event) {
@@ -44,12 +44,13 @@ self.addEventListener("install", function(event) {
 });
 
 self.addEventListener("activate", function(event) {
+  console.log("Aktivasi service worker baru");
+
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
       return Promise.all(
         cacheNames.map(function(cacheName) {
-          if (cacheName != CACHE_NAME) {
-            console.log("ServiceWorker: cache " + cacheName + " dihapus");
+          if (cacheName != CACHE_NAME && cacheName.startsWith("firstpwa")) {
             return caches.delete(cacheName);
           }
         })
@@ -68,11 +69,20 @@ self.addEventListener("fetch", function(event) {
           return response;
         }
 
-        console.log(
-          "ServiceWorker: Memuat aset dari server: ",
-          event.request.url
-        );
-        return fetch(event.request);
+        var fetchRequest = event.request.clone();
+
+        return fetch(fetchRequest).then(function(response) {
+          if (!response || response.status !== 200) {
+            return response;
+          }
+
+          var responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(function(cache) {
+            cache.put(event.request, responseToCache);
+          });
+
+          return response;
+        });
       })
   );
 });
