@@ -59,10 +59,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
           switch (page) {
             case "standings":
+              loadStandingsPage();
               break;
             case "matches":
               break;
             case "favorites":
+              loadFavoritesPage();
               break;
           }
         } else if (this.status == 404) {

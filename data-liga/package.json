@@ -1,0 +1,14 @@
+{
+  "name": "football-league",
+  "version": "1.0.0",
+  "description": "no desc",
+  "main": "js/app.js",
+  "dependencies": {
+    "idb": "^2.1.3",
+    "web-push": "^3.4.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

@@ -1,6 +1,7 @@
-var base_url = "api.football-data.org/v2/competitions/2021/";
-var team_base_url = "api.football-data.org/v2/teams/";
-var match_base_url = "";
+var base_url = "api.football-data.org/v2/";
+var standings_url = "competitions/2021/";
+var team_url = "teams/";
+var match_url = "competitions/2021/";
 
 function status(response) {
   if (response.status !== 200) {
@@ -31,7 +32,7 @@ async function getStandings() {
   };
 
   standings = await fetch(
-    proxy + base_url + "standings?standingType=TOTAL",
+    proxy + base_url + standings_url + "standings?standingType=TOTAL",
     options
   )
     .then(status)
@@ -39,6 +40,28 @@ async function getStandings() {
     .catch(error);
 
   return standings;
+}
+
+async function getMatches() {
+  let proxy = "https://cors-anywhere.herokuapp.com/";
+  let matches = {};
+  let options = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-Auth-Token": "3901c72a75b24e7c97fc5210ecf7eaef"
+    },
+    credentials: "same-origin"
+  };
+
+  matches = await fetch(
+    proxy + base_url + match_url + "matches?season=2019",
+    options
+  )
+    .then(status)
+    .then(json)
+    .catch(error);
+
+  return matches;
 }
 
 async function getTeam(teamId) {
@@ -52,7 +75,7 @@ async function getTeam(teamId) {
     credentials: "same-origin"
   };
 
-  team = await fetch(proxy + team_base_url + teamId, options)
+  team = await fetch(proxy + base_url + team_url + teamId, options)
     .then(status)
     .then(json)
     .catch(e => {
@@ -60,4 +83,16 @@ async function getTeam(teamId) {
     });
 
   return team;
+}
+
+async function loadDetailTeam() {
+  let detailTeam = await fetch("../../pages/detailtim.html")
+    .then(response => {
+      return response.text();
+    })
+    .catch(e => {
+      console.error(e);
+    });
+
+  return detailTeam;
 }
