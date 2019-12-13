@@ -1,38 +1,32 @@
-const CACHE_NAME = "football-league-v1";
+const CACHE_NAME = "football-league-v2";
 var urlsToCache = [
   "/",
-  "/nav.html",
   "/manifest.json",
+  "/nav.html",
   "/index.html",
-  "/pages/home.html",
-  "/pages/about.html",
-  "/pages/services.html",
-  "/pages/contact.html",
+  "/pages/standings.html",
+  "/pages/detailtim.html",
+  "/pages/favorites.html",
+  "/pages/matches.html",
   "/css/materialize.min.css",
   "/css/style.css",
   "/js/materialize.min.js",
   "/js/nav.js",
-  "/img/c_programming.svg",
-  "/img/c_sharp_programming.svg",
-  "/img/cplus_programming.svg",
-  "/img/html_5_programming.svg",
-  "/img/java_programming.svg",
-  "/img/kotlin_programming.svg",
-  "/img/react_programming.svg",
-  "/img/xamarin_programming.svg",
-  "/img/trianglify-background.svg",
-  "/img/s1.webp",
-  "/img/s2.webp",
-  "/img/s3.webp",
-  "/img/hero_user.webp",
-  "/img/user.webp",
-  "/img/logo/logo_36.png",
-  "/img/logo/logo_48.png",
-  "/img/logo/logo_72.png",
-  "/img/logo/logo_96.png",
-  "/img/logo/logo_144.png",
-  "/img/logo/logo_192.png",
-  "/img/logo/logo_512.png"
+  "/js/api.js",
+  "/js/app.js",
+  "/js/dbhelper.js",
+  "/js/idb.js",
+  "/img/logo/logo.svg",
+  "/img/logo/logo-32.png",
+  "/img/logo/logo-36.png",
+  "/img/logo/logo-48.png",
+  "/img/logo/logo-57.png",
+  "/img/logo/logo-72.png",
+  "/img/logo/logo-96.png",
+  "/img/logo/logo-114.png",
+  "/img/logo/logo-144.png",
+  "/img/logo/logo-192.png",
+  "/img/logo/logo-512.png"
 ];
 
 self.addEventListener("install", function(event) {
@@ -96,7 +90,7 @@ self.addEventListener("push", function(event) {
   }
   var options = {
     body: body,
-    icon: "img/logo/logo.svg",
+    icon: "img/logo/logo-32.png",
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
