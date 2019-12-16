@@ -79,6 +79,17 @@ body {
   overflow-x: scroll;
 }
 
+.title-matches {
+  font-size: large;
+  font-weight: bold;
+  margin: 0px;
+}
+
+.time-matches {
+  font-style: italic;
+  margin: 10px 0 0 0;
+}
+
 .click-team {
   cursor: pointer;
 }

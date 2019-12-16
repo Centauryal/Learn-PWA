@@ -97,6 +97,10 @@ async function loadStandingsPage() {
   initDatabase();
 }
 
+async function loadMatchesPage() {
+  await renderMatches();
+}
+
 async function loadFavoritesPage() {
   await renderFavorites();
 }
@@ -161,6 +165,38 @@ async function renderStandings() {
   }
 }
 
+async function renderMatches() {
+  let elmMatches = document.getElementById("data-matches");
+  if (typeof elmMatches != "undefined" && elmMatches != null) {
+    let matches = {};
+    let html = "";
+    if ("caches" in window) {
+      let proxy = "https://cors-anywhere.herokuapp.com/";
+      let base_url = `api.football-data.org/v2/competitions/2021/matches?season=2019`;
+      matches = await loadDataFromCaches(proxy, base_url);
+    }
+    matches = await getMatches();
+    Object.keys(matches).forEach(match => {
+      html += `
+      <div class="col s12 m6">
+            <div class="card-panel blue-grey card-panel-center">
+                <span class="white-text">
+                    <p class="title-matches truncate">
+                        ${match.homeTeam.name}<br>
+                        vs<br>
+                        ${match.awayTeam.name}<br>
+                    </p>
+                    <p class="time-matches">
+                        ${new Date(match.utcDate).toString().substring(0, 21)}
+                    </p>
+                </span>
+            </div>
+      </div>
+      `;
+    });
+  }
+}
+
 async function renderTeamPage() {
   let html = await loadDetailTeam();
   document.querySelector("#body-content").innerHTML = html;
@@ -172,7 +208,7 @@ async function renderTeamInfo(teamId) {
   if ("caches" in window) {
     let proxy = "https://cors-anywhere.herokuapp.com/";
     let base_url = `api.football-data.org/v2/teams/${teamId}`;
-    teamData = await loadDataFromCaches(proxy.base_url);
+    teamData = await loadDataFromCaches(proxy, base_url);
   }
 
   teamData = await getTeam(teamId);

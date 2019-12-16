@@ -62,6 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
               loadStandingsPage();
               break;
             case "matches":
+              loadMatchesPage();
               break;
             case "favorites":
               loadFavoritesPage();
