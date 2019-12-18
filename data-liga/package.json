@@ -1,7 +1,7 @@
 {
   "name": "football-league",
   "version": "1.0.0",
-  "description": "no desc",
+  "description": "Football league Apps",
   "main": "js/app.js",
   "dependencies": {
     "idb": "^2.1.3",

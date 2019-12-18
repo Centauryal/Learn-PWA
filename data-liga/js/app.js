@@ -168,32 +168,54 @@ async function renderStandings() {
 async function renderMatches() {
   let elmMatches = document.getElementById("data-matches");
   if (typeof elmMatches != "undefined" && elmMatches != null) {
-    let matches = {};
+    let match = {};
     let html = "";
+    let pad = n => {
+      return n < 10 ? "0" + n : n;
+    };
+
+    let today = new Date();
+    let day1 = today.getDate();
+    let month1 = today.getMonth() + 1;
+    let year1 = today.getFullYear();
+    let dateNow = year1 + "-" + pad(month1) + "-" + pad(day1);
+
+    let nextMonth = new Date();
+    nextMonth.setDate(nextMonth.getDate() + 30);
+    let day2 = nextMonth.getDate();
+    let month2 = nextMonth.getMonth() + 1;
+    let year2 = nextMonth.getFullYear();
+    let dateTo = year2 + "-" + pad(month2) + "-" + pad(day2);
+
     if ("caches" in window) {
       let proxy = "https://cors-anywhere.herokuapp.com/";
-      let base_url = `api.football-data.org/v2/competitions/2021/matches?season=2019`;
-      matches = await loadDataFromCaches(proxy, base_url);
+      let base_url = `api.football-data.org/v2/competitions/2021/matches?dateFrom=${dateNow}&dateTo=${dateTo}&status=SCHEDULED`;
+      match = await loadDataFromCaches(proxy, base_url);
     }
-    matches = await getMatches();
-    Object.keys(matches).forEach(match => {
+    match = await getMatches(dateNow, dateTo);
+    matchs = match.matches;
+    Object.keys(matchs).forEach(matches => {
       html += `
       <div class="col s12 m6">
-            <div class="card-panel blue-grey card-panel-center">
-                <span class="white-text">
-                    <p class="title-matches truncate">
-                        ${match.homeTeam.name}<br>
+            <div class="card-panel light-blue card-match-center">
+                <span>
+                    <p class="name-matches truncate">
+                        ${matchs[matches].homeTeam.name}<br>
                         vs<br>
-                        ${match.awayTeam.name}<br>
+                        ${matchs[matches].awayTeam.name}<br>
                     </p>
                     <p class="time-matches">
-                        ${new Date(match.utcDate).toString().substring(0, 21)}
+                        ${new Date(matchs[matches].utcDate)
+                          .toString()
+                          .substring(0, 21)}
                     </p>
                 </span>
             </div>
       </div>
       `;
     });
+
+    elmMatches.innerHTML = html;
   }
 }
 

@@ -60,6 +60,7 @@ body {
 .loading {
   text-align: center;
   font-size: 30px;
+  font-weight: bold;
 }
 
 .main-standings {
@@ -72,6 +73,7 @@ body {
   list-style: none;
   padding-left: 0;
   font-size: 25px;
+  font-weight: bold;
 }
 
 .body-standings {
@@ -80,14 +82,25 @@ body {
 }
 
 .title-matches {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.name-matches {
   font-size: large;
   font-weight: bold;
   margin: 0px;
+  color: #ffffff;
 }
 
 .time-matches {
   font-style: italic;
   margin: 10px 0 0 0;
+  color: #000000;
+}
+
+.card-match-center {
+  text-align: center;
 }
 
 .click-team {
@@ -179,6 +192,7 @@ body {
 
 .title-favorite {
   font-size: 28px;
+  font-weight: bold;
 }
 
 .favorite-team-card {

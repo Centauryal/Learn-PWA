@@ -1,7 +1,6 @@
 var base_url = "api.football-data.org/v2/";
 var standings_url = "competitions/2021/";
 var team_url = "teams/";
-var match_url = "competitions/2021/";
 
 function status(response) {
   if (response.status !== 200) {
@@ -42,7 +41,7 @@ async function getStandings() {
   return standings;
 }
 
-async function getMatches() {
+async function getMatches(dateNow, dateTo) {
   let proxy = "https://cors-anywhere.herokuapp.com/";
   let matches = {};
   let options = {
@@ -54,7 +53,14 @@ async function getMatches() {
   };
 
   matches = await fetch(
-    proxy + base_url + match_url + "matches?season=2019",
+    proxy +
+      base_url +
+      standings_url +
+      "matches?dateFrom=" +
+      dateNow +
+      "&dateTo=" +
+      dateTo +
+      "&status=SCHEDULED",
     options
   )
     .then(status)

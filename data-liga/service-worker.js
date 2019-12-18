@@ -2,6 +2,7 @@ const CACHE_NAME = "football-league-v2";
 var urlsToCache = [
   "/",
   "/manifest.json",
+  "/package.json",
   "/nav.html",
   "/index.html",
   "/pages/standings.html",
