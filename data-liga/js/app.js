@@ -92,84 +92,139 @@ function requestNotification() {
   }
 }
 
-async function loadStandingsPage() {
-  await renderStandings();
-  initDatabase();
+async function choiceLeagueStandings() {
+  let elmChoiceLeague = document.getElementById("change-standings");
+  let choiceDefault = 2021;
+  await loadStandings(choiceDefault);
+  elmChoiceLeague.innerHTML = `
+    <div class="col s12">
+      <button class="btn btn-change-league" onclick="loadStandings(2021)">Premier League</button>
+      <button class="btn btn-change-league" onclick="loadStandings(2014)">LaLiga Santander</button>
+      <button class="btn btn-change-league" onclick="loadStandings(2002)">Bundesliga</button>
+      <button class="btn btn-change-league" onclick="loadStandings(2015)">Ligue 1</button>
+    </div>
+    `;
 }
 
-async function loadMatchesPage() {
-  await renderMatches();
-}
-
-async function loadFavoritesPage() {
-  await renderFavorites();
-}
-
-async function loadTeamPage(teamId) {
-  await renderTeamPage();
-  await renderTeamInfo(teamId);
-  await loadFavorite(teamId);
-  toggleFav(teamId);
-}
-
-async function loadDataFromCaches(proxy, base_url) {
-  let cacheData = {};
-
-  await caches.match(proxy + base_url).then(response => {
-    if (response) {
-      cacheData = response.json();
-    }
-  });
-
-  return cacheData;
-}
-
-async function renderStandings() {
+async function loadStandings(leagueId) {
   let elmStandings = document.getElementById("data-standings");
   if (typeof elmStandings != "undefined" && elmStandings != null) {
-    let standings = {};
+    let elmTitleLeague = document.getElementById("title-standing");
     let html = "";
-    if ("caches" in window) {
-      let proxy = "https://cors-anywhere.herokuapp.com/";
-      let base_url = `api.football-data.org/v2/competitions/2021/standings?standingType=TOTAL`;
-      standings = await loadDataFromCaches(proxy, base_url);
+    let standingsLeague = {};
+
+    switch (leagueId) {
+      case 2021:
+        elmTitleLeague.innerHTML = `
+        <p>Premier League</p>
+        `;
+        break;
+      case 2014:
+        elmTitleLeague.innerHTML = `
+        <p>Laliga Santander</p>
+        `;
+        break;
+      case 2002:
+        elmTitleLeague.innerHTML = `
+        <p>Bundesliga</p>
+        `;
+        break;
+      case 2015:
+        elmTitleLeague.innerHTML = `
+        <p>Ligue 1</p>
+        `;
+        break;
     }
-    standings = await getStandings();
-    standings = standings.standings[0].table;
-    Object.keys(standings).forEach(standing => {
-      let teamUrl = standings[standing].team.crestUrl;
-      html += `
-      <tr onClick="loadTeamPage(${
-        standings[standing].team.id
-      })" class="click-team">
-        <td>${standings[standing].position}</td>
-        <td class="team-logos">
-          <img src="${teamUrl.replace(
-            /^http:\/\//i,
-            "https://"
-          )}" class="team-img">
-          <span><b>${standings[standing].team.name}</b></span>
-        </td>
-        <td>${standings[standing].playedGames}</td>
-        <td>${standings[standing].won}</td>
-        <td>${standings[standing].draw}</td>
-        <td>${standings[standing].lost}</td>
-        <td>${standings[standing].goalsFor}</td>
-        <td>${standings[standing].goalsAgainst}</td>
-        <td>${standings[standing].goalDifference}</td>
-        <td>${standings[standing].points}</td>
-      </tr>
-      `;
+
+    if ("caches" in window) {
+      caches
+        .match(
+          "api.football-data.org/v2/competitions/" +
+            leagueId +
+            "/standings?standingType=TOTAL"
+        )
+        .then(function(response) {
+          if (response) {
+            standingsLeague = response.json();
+          }
+        });
+    }
+
+    standingsLeague = await getStandings(leagueId);
+    standingsLeague.standings.forEach(function(league) {
+      league.table.forEach(function(teams) {
+        html += `
+        <tr onclick="location.href='./detailteam.html?id=${
+          teams.team.id
+        }'" class="click-team">
+          <td>${teams.position}</td>
+          <td class="team-logos">
+            <img src="${teams.team.crestUrl.replace(
+              /^http:\/\//i,
+              "https://"
+            )}" class="team-img">
+            <span><b>${teams.team.name}</b></span>
+          </td>
+          <td>${teams.playedGames}</td>
+          <td>${teams.won}</td>
+          <td>${teams.draw}</td>
+          <td>${teams.lost}</td>
+          <td>${teams.goalsFor}</td>
+          <td>${teams.goalsAgainst}</td>
+          <td>${teams.goalDifference}</td>
+          <td>${teams.points}</td>
+        </tr>
+        `;
+      });
     });
     elmStandings.innerHTML = html;
   }
 }
 
-async function renderMatches() {
+async function choiceLeagueMatches() {
+  let elmChoiceLeague = document.getElementById("change-matches");
+  let choiceDefault = 2021;
+  await loadMatches(choiceDefault);
+  elmChoiceLeague.innerHTML = `
+    <div class="col s12">
+      <button class="btn btn-change-league" onclick="loadMatches(2021)">Premier League</button>
+      <button class="btn btn-change-league" onclick="loadMatches(2014)">LaLiga Santander</button>
+      <button class="btn btn-change-league" onclick="loadMatches(2002)">Bundesliga</button>
+      <button class="btn btn-change-league" onclick="loadMatches(2015)">Ligue 1</button>
+    </div>
+    `;
+}
+
+async function loadMatches(leagueId) {
   let elmMatches = document.getElementById("data-matches");
   if (typeof elmMatches != "undefined" && elmMatches != null) {
-    let match = {};
+    let elmTitleMatch = document.getElementById("title-matches");
     let html = "";
+    let matchLeague = {};
+
+    switch (leagueId) {
+      case 2021:
+        elmTitleMatch.innerHTML = `
+        <p>Premier League Matches</p>
+        `;
+        break;
+      case 2014:
+        elmTitleMatch.innerHTML = `
+        <p>Laliga Santander Matches</p>
+        `;
+        break;
+      case 2002:
+        elmTitleMatch.innerHTML = `
+        <p>Bundesliga Matches</p>
+        `;
+        break;
+      case 2015:
+        elmTitleMatch.innerHTML = `
+        <p>Ligue 1 Matches</p>
+        `;
+        break;
+    }
+
     let pad = n => {
       return n < 10 ? "0" + n : n;
     };
@@ -188,26 +243,36 @@ async function renderMatches() {
     let dateTo = year2 + "-" + pad(month2) + "-" + pad(day2);
 
     if ("caches" in window) {
-      let proxy = "https://cors-anywhere.herokuapp.com/";
-      let base_url = `api.football-data.org/v2/competitions/2021/matches?dateFrom=${dateNow}&dateTo=${dateTo}&status=SCHEDULED`;
-      match = await loadDataFromCaches(proxy, base_url);
+      caches
+        .match(
+          "api.football-data.org/v2/competitions/" +
+            leagueId +
+            "/matches?dateFrom=" +
+            dateNow +
+            "&dateTo=" +
+            dateTo +
+            "&status=SCHEDULED"
+        )
+        .then(function(response) {
+          if (response) {
+            matchLeague = response.json();
+          }
+        });
     }
-    match = await getMatches(dateNow, dateTo);
-    matchs = match.matches;
-    Object.keys(matchs).forEach(matches => {
+
+    matchLeague = await getMatches(leagueId, dateNow, dateTo);
+    matchLeague.matches.forEach(function(match) {
       html += `
       <div class="col s12 m6">
             <div class="card-panel light-blue card-match-center">
                 <span>
                     <p class="name-matches truncate">
-                        ${matchs[matches].homeTeam.name}<br>
+                        ${match.homeTeam.name}<br>
                         vs<br>
-                        ${matchs[matches].awayTeam.name}<br>
+                        ${match.awayTeam.name}<br>
                     </p>
                     <p class="time-matches">
-                        ${new Date(matchs[matches].utcDate)
-                          .toString()
-                          .substring(0, 21)}
+                        ${new Date(match.utcDate).toString().substring(0, 21)}
                     </p>
                 </span>
             </div>
@@ -219,147 +284,171 @@ async function renderMatches() {
   }
 }
 
-async function renderTeamPage() {
-  let html = await loadDetailTeam();
-  document.querySelector("#body-content").innerHTML = html;
-}
-
-async function renderTeamInfo(teamId) {
-  let teamData = {};
-
-  if ("caches" in window) {
-    let proxy = "https://cors-anywhere.herokuapp.com/";
-    let base_url = `api.football-data.org/v2/teams/${teamId}`;
-    teamData = await loadDataFromCaches(proxy, base_url);
-  }
-
-  teamData = await getTeam(teamId);
-
-  if (teamData != null) {
-    let teamUrl = teamData.crestUrl;
-
-    let elem = document.querySelector("#info-detail");
-    elem.innerHTML = `
-      <div class="detail-logo-wrapper">
-        <img id="team-img" src="${teamUrl.replace(/^http:\/\//i, "https://")}">
-      </div>
-      <div class="detail-logo-info">
-        <h1 id="team-title"><b>${teamData.name}</b></h1>
-        <p>${teamData.address}</p>
-        <p>${teamData.phone}</p>
-        <p><a href="${
-          teamData.website != null ? teamData.website : "#klasemen"
-        }" target="_blank">Official Website</a></p>
-        <p id="team-email">${
-          teamData.email != null ? teamData.email : "No Email"
-        }</p>
-        <a class="waves-effect waves-light btn btn-team">
-          <i class="iconify left btn-favorite pulse" data-icon="fa-heart" onclick="toggleFav(teamId)"></i>Favorite
-        </a>
-      </div>
-    `;
-
-    let squadTable = document.querySelector("#squad-team");
-    let squadHtml = "";
-    let squads = teamData.squad;
-    Object.keys(squads).forEach((squad, index) => {
-      let squadDateUTC = new Date(squads[squad].dateOfBirth);
-      let Day = squadDateUTC.getDate();
-      let Month = squadDateUTC.getMonth() + 1;
-      let FullYear = squadDateUTC.getFullYear();
-      squadHtml += `
-          <tr>
-              <td>${index + 1}</td>
-              <td>${squads[squad].name}</td>
-              <td>${squads[squad].position}</td>
-              <td>${Month + "-" + Day + "-" + FullYear}</td>
-              <td>${squads[squad].countryOfBirth}</td>
-              <td>${squads[squad].nationality}</td>
-          </tr>
-      `;
-    });
-
-    squadTable.innerHTML = squadHtml;
-  } else {
-    let elem = document.querySelector("#info-detail");
-    elem.innerHTML = `<p>Failed to get data</p>`;
-    let squadTable = document.querySelector("#squad-team");
-    squadTable.innerHTML = `<td colspan="6" style="text-align: center;">Please check your internet connections!</td>`;
-  }
-}
-
-async function renderFavorites() {
-  let favElem = document.getElementById("data-favorite");
-  if (typeof favElem != "undefined" && favElem != null) {
-    let teamData = await getAllDataFromDB();
-    let html = "";
-    if (teamData.length > 0) {
-      teamData.forEach((team, index) => {
-        let teamUrl = team.teamLogo;
-        html += `
-                  <a onclick="loadTeamPage(${
-                    team.teamId
-                  })" style="cursor: pointer;">
-                      <div class="favorite-team-card-item">
-                          <div class="favorite-team-img-wrapper">
-                              <img src="${teamUrl.replace(
-                                /^http:\/\//i,
-                                "https://"
-                              )}">
-                          </div>
-                          <p><b>${team.teamTitle}</b><br>${team.teamEmail}</p>
-                      </div>
-                  </a>
-              `;
-      });
-    } else {
-      html = `
-              <p><b>There's no favorites team</b></p>
-          `;
+async function loadTeamInfo() {
+  return new Promise(async function(resolve, reject) {
+    var urlParams = new URLSearchParams(window.location.search);
+    var teamId = urlParams.get("id");
+    let teamData = {};
+    if ("caches" in window) {
+      caches
+        .match("api.football-data.org/v2/teams/" + teamId)
+        .then(function(response) {
+          if (response) {
+            teamData = response.json();
+            resolve(teamData);
+          }
+        });
     }
 
-    favElem.innerHTML = html;
-  }
+    teamData = await getTeam(teamId);
+
+    if (teamData != null) {
+      let detailTeam = `
+      <div class="main-wrapper container">
+        <div class="card team-card">
+          <div class="team-card-title">
+            <div class="detail-logo-wrapper">
+              <img id="team-img" src="${teamData.crestUrl.replace(
+                /^http:\/\//i,
+                "https://"
+              )}">
+            </div>
+            <div class="detail-logo-info">
+              <h1 id="team-title"><b>${teamData.name}</b></h1>
+              <p id="team-venue"><b>${teamData.venue}</b></p>
+              <p>${teamData.address}</p>
+              <p>${teamData.phone}</p>
+              <p><a href="${
+                teamData.website != null ? teamData.website : "#klasemen"
+              }" target="_blank">Official Website</a></p>
+              <p id="team-email">${
+                teamData.email != null ? teamData.email : "No Email"
+              }</p>
+              <a id="btnFavorite" class="btn waves-effect waves-light btn-team">
+                <i class="iconify left btn-favorite pulse" data-icon="fa-heart"></i>Favorite
+              </a>
+            </div>
+          </div>
+          <div id="squad-team" class="row">
+          </div>
+        </div>
+      </div>
+      `;
+      document.getElementById("body-content").innerHTML = detailTeam;
+      resolve(teamData);
+
+      let squadTeam = document.getElementById("squad-team");
+      let squadHtml = "";
+      teamData.squad.forEach(function(squads) {
+        let birthday = new Date(squads.dateOfBirth);
+        let day = birthday.getDate();
+        let month = birthday.getMonth() + 1;
+        let fullYear = birthday.getFullYear();
+        squadHtml += `
+          <div class="col s12 m6">
+                <div class="card-panel card-detail-center">
+                    <span>
+                        <p class="detail-name truncate">
+                            ${squads.name}
+                        </p>
+                        <p class="detail-all">
+                        ${
+                          squads.position != null ? squads.position : "Coach"
+                        }<br>
+                        ${squads.nationality}
+                        </p>
+                        <p class="detail-all">
+                        ${month + "-" + day + "-" + fullYear}
+                        </p>
+                    </span>
+                </div>
+          </div>
+        `;
+      });
+
+      squadTeam.innerHTML = squadHtml;
+    } else {
+      let elem = document.getElementById("info-detail");
+      elem.innerHTML = `<p>Failed to get data</p>`;
+      let squadTeam = document.getElementById("squad-team");
+      squadTeam.innerHTML = `<p style="text-align: center;">Please check your internet connections!</p>`;
+    }
+  });
 }
 
-async function loadFavorite(teamId) {
-  let toggleBtn = document.querySelector(".btn-team");
-  let status = false;
-  let findedData = await countDataDB(teamId);
-  console.log(findedData);
-  if (findedData < 1) {
-    //tidak ada di list
-    toggleBtn.classList.remove("red");
-    status = true;
+async function getFavorites() {
+  let teams = await getAllFromDB();
+  console.log(teams);
+  let html = "";
+  if (teams.length > 0) {
+    teams.forEach(function(team) {
+      html += `
+          <div class="col s12 m6">
+                <div class="card-panel favorite-team-card-item">
+                  <a href="./detailteam.html?id=${team.id}">
+                    <div class="favorite-team-img-wrapper">
+                        <img src="${team.crestUrl.replace(
+                          /^http:\/\//i,
+                          "https://"
+                        )}">
+                    </div>
+                    <span>
+                        <p class="detail-name truncate">
+                            ${team.name}
+                        </p>
+                        <p class="white-text">${team.venue}<br>
+                        ${team.phone}<br>
+                        ${team.email != null ? team.email : "No Email"}
+                        </p>
+                    </span>
+                  </a>
+                </div>
+          </div>
+        `;
+    });
   } else {
-    //ada di list
-    toggleBtn.classList.add("red");
+    html = `
+      <p><b>There's no favorites team</b></p>
+      `;
+  }
+  document.getElementById("data-favorite").innerHTML = html;
+}
+
+var favoritePromise = function() {
+  return new Promise((resolve, reject) => {
+    let item = {};
+    resolve(item);
+  });
+};
+
+async function stateFavorite(teamId) {
+  let btnFav = document.querySelector("#btnFavorite");
+  let status = false;
+
+  let teamData = await getDataDBById(teamId);
+  if (teamData != null) {
     status = false;
+    btnFav.classList.add("red");
+  } else {
+    status = true;
+    btnFav.classList.remove("red");
   }
   return status;
 }
 
-async function toggleFav(teamId) {
-  let toggleBtn = document.querySelector(".btn-team");
-  let teamTitle = document.querySelector("#team-title").innerHTML;
-  let teamEmail = document.querySelector("#team-email").innerHTML;
-  let teamLogo = document.querySelector("#team-img").getAttribute("src");
-  let teamIdFavorite = teamId;
-  toggleBtn.onclick = async e => {
-    let check = await loadFavorite(teamIdFavorite);
-    if (check) {
-      await insertDataDB({
-        teamId: teamIdFavorite,
-        teamLogo: teamLogo,
-        teamTitle: teamTitle,
-        teamEmail: teamEmail
-      });
+async function loadFavorite(item) {
+  let toggleBtn = document.querySelector("#btnFavorite");
+
+  toggleBtn.onclick = async function() {
+    let isFavorite = await stateFavorite(item.id);
+    if (isFavorite) {
+      insertDataDB(item);
       toggleBtn.classList.add("red");
-      M.toast({ html: "Team added to favorite!", classes: "toast-bg" });
+      M.toast({ html: "Favorite team added", classes: "toast-bg" });
     } else {
-      await deleteDataDB(teamIdFavorite);
+      deleteDataDB(item.id);
       toggleBtn.classList.remove("red");
-      M.toast({ html: "Team removed from favorite!", classes: "toast-bg" });
+      M.toast({ html: "Favorite team deleted", classes: "toast-bg" });
     }
   };
 }

@@ -1,6 +1,16 @@
-var base_url = "api.football-data.org/v2/";
-var standings_url = "competitions/2021/";
-var team_url = "teams/";
+const base_url = "https://api.football-data.org/v2/";
+const standings_url = "competitions/";
+const team_url = "teams/";
+const API_KEY = "3901c72a75b24e7c97fc5210ecf7eaef";
+
+const fetchApi = function(url) {
+  return fetch(url, {
+    mode: "cors",
+    headers: {
+      "X-Auth-Token": API_KEY
+    }
+  });
+};
 
 function status(response) {
   if (response.status !== 200) {
@@ -19,86 +29,40 @@ function error(error) {
   console.log("Error : " + error);
 }
 
-async function getStandings() {
-  let proxy = "https://cors-anywhere.herokuapp.com/";
-  let standings = {};
-  let options = {
-    headers: {
-      "Content-Type": "application/json",
-      "X-Auth-Token": "3901c72a75b24e7c97fc5210ecf7eaef"
-    },
-    credentials: "same-origin"
-  };
-
-  standings = await fetch(
-    proxy + base_url + standings_url + "standings?standingType=TOTAL",
-    options
+async function getStandings(leagueId) {
+  let response = await fetchApi(
+    base_url + standings_url + leagueId + "/standings?standingType=TOTAL"
   )
     .then(status)
     .then(json)
     .catch(error);
 
-  return standings;
+  return response;
 }
 
-async function getMatches(dateNow, dateTo) {
-  let proxy = "https://cors-anywhere.herokuapp.com/";
-  let matches = {};
-  let options = {
-    headers: {
-      "Content-Type": "application/json",
-      "X-Auth-Token": "3901c72a75b24e7c97fc5210ecf7eaef"
-    },
-    credentials: "same-origin"
-  };
-
-  matches = await fetch(
-    proxy +
-      base_url +
+async function getMatches(leagueId, dateNow, dateTo) {
+  let response = await fetchApi(
+    base_url +
       standings_url +
-      "matches?dateFrom=" +
+      leagueId +
+      "/matches?dateFrom=" +
       dateNow +
       "&dateTo=" +
       dateTo +
-      "&status=SCHEDULED",
-    options
+      "&status=SCHEDULED"
   )
     .then(status)
     .then(json)
     .catch(error);
 
-  return matches;
+  return response;
 }
 
 async function getTeam(teamId) {
-  let proxy = "https://cors-anywhere.herokuapp.com/";
-  let team = {};
-  let options = {
-    headers: {
-      "Content-Type": "application/json",
-      "X-Auth-Token": "3901c72a75b24e7c97fc5210ecf7eaef"
-    },
-    credentials: "same-origin"
-  };
-
-  team = await fetch(proxy + base_url + team_url + teamId, options)
+  let response = await fetchApi(base_url + team_url + teamId)
     .then(status)
     .then(json)
-    .catch(e => {
-      console.error(e);
-    });
+    .catch(error);
 
-  return team;
-}
-
-async function loadDetailTeam() {
-  let detailTeam = await fetch("../../pages/detailtim.html")
-    .then(response => {
-      return response.text();
-    })
-    .catch(e => {
-      console.error(e);
-    });
-
-  return detailTeam;
+  return response;
 }

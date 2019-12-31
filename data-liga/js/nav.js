@@ -14,32 +14,27 @@ document.addEventListener("DOMContentLoaded", function() {
       if (this.readyState == 4) {
         if (this.status != 200) return;
 
-        // Muat daftar tautan menu
         document.querySelectorAll(".topnav, .sidenav").forEach(function(elm) {
           elm.innerHTML = xhttp.responseText;
         });
 
-        //Daftar event listener untuk setiap tautan menu
         document
           .querySelectorAll(".sidenav a, .topnav a")
           .forEach(function(elm) {
             elm.addEventListener("click", function(event) {
-              //hapus class
+              
               document
                 .querySelectorAll(".sidenav a, .topnav li")
                 .forEach(elm => {
                   elm.classList.remove("active");
                 });
 
-              //tutup sidenav
               var sidenav = document.querySelector(".sidenav");
               M.Sidenav.getInstance(sidenav).close();
 
-              //muat konten halaman yang dipanggil
               page = event.target.getAttribute("href").substr(1);
               loadPage(page);
 
-              //tambah class
               elm.parentElement.setAttribute("class", "active");
             });
           });
@@ -59,13 +54,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
           switch (page) {
             case "standings":
-              loadStandingsPage();
+              choiceLeagueStandings();
               break;
             case "matches":
-              loadMatchesPage();
+              choiceLeagueMatches();
               break;
             case "favorites":
-              loadFavoritesPage();
+              getFavorites();
               break;
           }
         } else if (this.status == 404) {

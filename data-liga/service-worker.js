@@ -1,12 +1,11 @@
-const CACHE_NAME = "football-league-v2";
+const CACHE_NAME = "football-league-v5";
 var urlsToCache = [
   "/",
   "/manifest.json",
-  "/package.json",
   "/nav.html",
   "/index.html",
+  "/detailteam.html",
   "/pages/standings.html",
-  "/pages/detailtim.html",
   "/pages/favorites.html",
   "/pages/matches.html",
   "/css/materialize.min.css",
@@ -15,7 +14,7 @@ var urlsToCache = [
   "/js/nav.js",
   "/js/api.js",
   "/js/app.js",
-  "/js/dbhelper.js",
+  "/js/db.js",
   "/js/idb.js",
   "/img/logo/logo.svg",
   "/img/logo/logo-32.png",
@@ -45,7 +44,10 @@ self.addEventListener("activate", function(event) {
     caches.keys().then(function(cacheNames) {
       return Promise.all(
         cacheNames.map(function(cacheName) {
-          if (cacheName != CACHE_NAME && cacheName.startsWith("firstpwa")) {
+          if (
+            cacheName != CACHE_NAME &&
+            cacheName.startsWith("football-league")
+          ) {
             return caches.delete(cacheName);
           }
         })
@@ -55,31 +57,23 @@ self.addEventListener("activate", function(event) {
 });
 
 self.addEventListener("fetch", function(event) {
-  event.respondWith(
-    caches
-      .match(event.request, { cacheName: CACHE_NAME })
-      .then(function(response) {
-        if (response) {
-          console.log("ServiceWorker: Gunakan aset dari cache: ", response.url);
-          return response;
-        }
-
-        var fetchRequest = event.request.clone();
-
-        return fetch(fetchRequest).then(function(response) {
-          if (!response || response.status !== 200) {
-            return response;
-          }
-
-          var responseToCache = response.clone();
-          caches.open(CACHE_NAME).then(function(cache) {
-            cache.put(event.request, responseToCache);
-          });
-
+  var base_url = "https://api.football-data.org/v2/";
+  if (event.request.url.indexOf(base_url) > -1) {
+    event.respondWith(
+      caches.open(CACHE_NAME).then(function(cache) {
+        return fetch(event.request).then(function(response) {
+          cache.put(event.request.url, response.clone());
           return response;
         });
       })
-  );
+    );
+  } else {
+    event.respondWith(
+      caches.match(event.request).then(function(response) {
+        return response || fetch(event.request);
+      })
+    );
+  }
 });
 
 self.addEventListener("push", function(event) {
