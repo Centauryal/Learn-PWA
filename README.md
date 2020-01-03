@@ -1,9 +1,9 @@
-# Learn Membangun PWA Academy Dicoding
+# Learned Membangun PWA Academy Dicoding
 
 This repository is about learning to build applications using Progressive Web Apps, from building portfolios Apps using static web to building Football League Apps using dynamic web from [Football-data.org](https://www.football-data.org) and [Firebase Hosting](https://firebase.google.com/docs/hosting) for web apps.
 
 <p align="center">
-  <img src="./assets/ss_splash_screen.png" width="250">
+  <img src="./assets/ss_splash_screen.jpg" width="250">
   <img src="./assets/ss_standings.png" width="250">
   <img src="./assets/ss_matches.png" width="250">
 </p>
