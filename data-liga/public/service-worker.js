@@ -1,5 +1,5 @@
 importScripts(
-  "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js"
+  "https://storage.googleapis.com/workbox-cdn/releases/6.5.2/workbox-sw.js"
 );
 
 const CACHE_NAME = "football-league-v5";
