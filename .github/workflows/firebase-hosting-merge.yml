@@ -14,7 +14,6 @@ jobs:
       - run: ls ./data-liga
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          entrypoint: /data-liga/
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FOOTBALL_LEAGUE_68E18 }}'
           channelId: live
