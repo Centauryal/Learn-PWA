@@ -7,6 +7,11 @@ const fetchApi = function(url) {
   return fetch(url, {
     mode: "cors",
     headers: {
+      'Access-Control-Allow-Methods': 'GET, POST',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': "X-Auth-Token, x-response-control",
+      'Content-Length': 0,
+      'Content-Type': 'application/json',
       "X-Auth-Token": API_KEY
     }
   });
