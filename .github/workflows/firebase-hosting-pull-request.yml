@@ -9,9 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: 'n'
+      - run: ls ./data-liga
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
+          entrypoint: /data-liga/
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FOOTBALL_LEAGUE_68E18 }}'
           projectId: football-league-68e18
