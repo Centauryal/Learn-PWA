@@ -42,28 +42,28 @@ if (workbox) {
 
   workbox.routing.registerRoute(
     new RegExp(base_url),
-    workbox.strategies.staleWhileRevalidate({
-      cacheName: CACHE_NAME
+    new workbox.strategies.StaleWhileRevalidate({
+      cacheName: CACHE_NAME,
     })
   );
 
   workbox.routing.registerRoute(
-    new RegExp("/pages/"),
-    workbox.strategies.staleWhileRevalidate({
-      cacheName: CACHE_NAME
+    new RegExp('/pages/'),
+    new workbox.strategies.StaleWhileRevalidate({
+      cacheName: CACHE_NAME,
     })
   );
 
   workbox.routing.registerRoute(
-    /^https:\/\/fonts\.googleapis\.com/,
-    workbox.strategies.staleWhileRevalidate({
+    new RegExp('https://fonts.googleapis.com/'),
+    new workbox.strategies.StaleWhileRevalidate({
       cacheName: "google-fonts-stylesheets"
     })
   );
 
   workbox.routing.registerRoute(
-    /^https:\/\/code\.iconify\.design/,
-    workbox.strategies.staleWhileRevalidate({
+    new RegExp('https://code.iconify.design/'),
+    new workbox.strategies.StaleWhileRevalidate({
       cacheName: "iconify-design"
     })
   );
@@ -73,7 +73,7 @@ if (workbox) {
     new workbox.strategies.CacheFirst({
       cacheName: CACHE_NAME,
       plugins: [
-        new workbox.expiration.Plugin({
+        new workbox.expiration.ExpirationPlugin({
           maxEntries: 60,
           maxAgeSeconds: 30 * 24 * 60 * 60
         })
