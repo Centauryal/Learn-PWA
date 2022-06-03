@@ -17,7 +17,7 @@ const fetchApi = function(url) {
   });
 };
 
-function status(response) {
+function statusResponse(response) {
   if (response.status !== 200) {
     console.log("Error : " + response.status);
     return Promise.reject(new Error(response.statusText));
@@ -38,7 +38,7 @@ async function getStandings(leagueId) {
   let response = await fetchApi(
     base_url + standings_url + leagueId + "/standings?standingType=TOTAL"
   )
-    .then(status)
+    .then(statusResponse)
     .then(json)
     .catch(error);
 
@@ -56,7 +56,7 @@ async function getMatches(leagueId, dateNow, dateTo) {
       dateTo +
       "&status=SCHEDULED"
   )
-    .then(status)
+    .then(statusResponse)
     .then(json)
     .catch(error);
 
@@ -65,7 +65,7 @@ async function getMatches(leagueId, dateNow, dateTo) {
 
 async function getTeam(teamId) {
   let response = await fetchApi(base_url + team_url + teamId)
-    .then(status)
+    .then(statusResponse)
     .then(json)
     .catch(error);
 
